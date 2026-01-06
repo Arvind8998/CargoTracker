@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Cargo Tracker",
+    "slug": "cargo-tracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allow Cargo Tracker to access your location while the app is in use to show truck locations.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow Cargo Tracker to access your location in the background to send live location updates.",
+        "NSLocationAlwaysUsageDescription": "Allow Cargo Tracker to access your location in the background to send live location updates."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location",
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to access your location while the app is in use"
+        }
+      ],
+      "@react-native-community/datetimepicker"
+    ]
+  }
+}
