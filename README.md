@@ -1,339 +1,294 @@
-# Cargo Tracker - Truck Fleet Management App
+# 🚚 Cargo Tracker – Truck Fleet Management App
 
-A complete React Native + Expo mobile application for managing truck fleets with real-time location tracking, trip management, and fuel stop monitoring. Built with Supabase backend, gluestack-ui for beautiful components, and React Navigation.
-
-## Features
-
-- **User Authentication**: Secure login with Supabase
-- **Manager Dashboard**: Real-time summary of trucks, trips, weight, and fuel metrics
-- **Trip Management**: Create, track, and manage deliveries
-- **Fuel Stop Tracking**: Log fuel refills during trips
-- **Unload Entry**: Mark trips as complete with automatic travel time calculation
-- **Trips List**: Day-wise filtering and detailed trip information
-- **Live Location Tracking**: Real-time truck positions on an interactive map
-- **Responsive Design**: Beautiful UI using gluestack-ui components
-
-## Tech Stack
-
-- **Frontend**: React Native + Expo
-- **UI Components**: gluestack-ui (Tailwind-based)
-- **Navigation**: React Navigation (Stack Navigator)
-- **Backend**: Supabase (Postgres + Real-time)
-- **Location**: Expo Location + react-native-maps
-- **Styling**: NativeWind (Tailwind CSS for React Native)
-
-## Prerequisites
-
-- Node.js (v16+)
-- npm or yarn
-- Supabase account (free tier)
-- Expo Go app (for testing on mobile)
-
-## Installation
-
-1. **Clone or extract the project**
-   ```bash
-   cd CargoTracker
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-   
-   If you encounter issues:
-   ```bash
-   npm install --force
-   ```
-
-3. **Set up Supabase**
-   - Create a free account at [supabase.com](https://supabase.com)
-   - Create a new project
-   - Get your project URL and anon key from Settings > API
-   - Update `supabase.ts`:
-     ```typescript
-     const SUPABASE_URL = 'your-project-url';
-     const SUPABASE_ANON_KEY = 'your-anon-key';
-     ```
-
-4. **Create Database Tables in Supabase**
-   
-   Execute the following SQL in Supabase SQL Editor:
-
-   ```sql
-   -- Trucks table
-   CREATE TABLE trucks (
-     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     truck_no TEXT UNIQUE NOT NULL,
-     bid_number TEXT,
-     created_at TIMESTAMP DEFAULT now()
-   );
-
-   -- Trips table
-   CREATE TABLE trips (
-     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     truck_id UUID REFERENCES trucks(id),
-     bid_number TEXT,
-     quantity_tons NUMERIC,
-     chemical_type TEXT,
-     depart_time TIMESTAMP,
-     arrival_time TIMESTAMP,
-     from_plant TEXT,
-     to_plant TEXT,
-     travel_time_minutes NUMERIC,
-     unloaded BOOLEAN DEFAULT false,
-     unloaded_time TIMESTAMP,
-     created_at TIMESTAMP DEFAULT now()
-   );
-
-   -- Fuel stops table
-   CREATE TABLE fuel_stops (
-     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     trip_id UUID REFERENCES trips(id),
-     stop_time TIMESTAMP,
-     fuel_refilled_liters NUMERIC,
-     location TEXT,
-     created_at TIMESTAMP DEFAULT now()
-   );
-
-   -- Live locations table (enable Realtime!)
-   CREATE TABLE live_locations (
-     truck_id UUID PRIMARY KEY REFERENCES trucks(id),
-     latitude NUMERIC NOT NULL,
-     longitude NUMERIC NOT NULL,
-     updated_at TIMESTAMP DEFAULT now()
-   );
-
-   -- Enable Realtime on live_locations
-   ALTER TABLE live_locations ENABLE ROW LEVEL SECURITY;
-   ALTER PUBLICATION supabase_realtime ADD TABLE live_locations;
-   ```
-
-5. **Add Test Data** (Optional)
-   
-   In Supabase SQL Editor:
-   ```sql
-   INSERT INTO trucks (truck_no, bid_number) VALUES 
-   ('TN01AA1234', 'BID-001'),
-   ('TN02BB5678', 'BID-002'),
-   ('TN03CC9012', 'BID-003');
-
-   INSERT INTO auth.users (email, encrypted_password) VALUES
-   ('test@example.com', crypt('password123', gen_salt('bf')));
-   ```
-
-## Running the App
-
-1. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-2. **Run on Android**
-   ```bash
-   npm run android
-   ```
-   
-   Or in the Expo terminal, press `a`
-
-3. **Run on iOS**
-   ```bash
-   npm run ios
-   ```
-   
-   Or in the Expo terminal, press `i`
-
-4. **Scan QR Code**
-   - Open Expo Go app on your phone
-   - Scan the QR code from the terminal
-   - App will load in seconds
-
-## Project Structure
-
-```
-CargoTracker/
-├── App.tsx                    # Main entry point
-├── supabase.ts               # Supabase client setup
-├── gluestack-ui.config.ts    # UI theme config
-├── app.json                  # Expo config
-├── package.json              # Dependencies
-├── screens/
-│   ├── LoginScreen.tsx       # User authentication
-│   ├── DashboardScreen.tsx   # Summary dashboard
-│   ├── AddTripScreen.tsx     # Create new trip
-│   ├── FuelStopScreen.tsx    # Add fuel refill
-│   ├── UnloadScreen.tsx      # Mark unload
-│   ├── TripsListScreen.tsx   # View all trips
-│   └── LiveMapScreen.tsx     # Real-time tracking
-└── assets/                   # App icons and splash screens
-```
-
-## Usage
-
-### 1. Login
-- Enter your Supabase credentials
-- First time? Create a user in Supabase dashboard: Settings > Authentication > Users > Add User
-
-### 2. Dashboard
-- View trucks count, trips today, total weight, and fuel usage
-- Quick navigation to all features
-
-### 3. Add Trip
-- Select truck from dropdown
-- Enter bid number, quantity, chemical type
-- Set departure plant
-- Trip auto-starts tracking
-
-### 4. During Trip
-- Add fuel stops whenever needed
-- Track multiple refills per trip
-
-### 5. Complete Trip
-- Mark as unloaded with destination
-- System auto-calculates travel time
-
-### 6. Monitor
-- View all trips with date filter
-- Check live truck locations on map
-- Real-time updates as trucks move
-
-## Database Schema
-
-### trucks
-| Column | Type | Notes |
-|--------|------|-------|
-| id | UUID | Primary key |
-| truck_no | TEXT | Unique truck identifier |
-| bid_number | TEXT | Associated bid |
-
-### trips
-| Column | Type | Notes |
-|--------|------|-------|
-| id | UUID | Primary key |
-| truck_id | UUID | Foreign key to trucks |
-| quantity_tons | NUMERIC | Cargo weight |
-| chemical_type | TEXT | Chemical name |
-| depart_time | TIMESTAMP | Start time |
-| arrival_time | TIMESTAMP | End time |
-| from_plant | TEXT | Origin |
-| to_plant | TEXT | Destination |
-| travel_time_minutes | NUMERIC | Auto-calculated |
-| unloaded | BOOLEAN | Completion status |
-
-### fuel_stops
-| Column | Type | Notes |
-|--------|------|-------|
-| trip_id | UUID | Foreign key to trips |
-| fuel_refilled_liters | NUMERIC | Fuel amount |
-| stop_time | TIMESTAMP | When refilled |
-| location | TEXT | Where refilled |
-
-### live_locations (Real-time)
-| Column | Type | Notes |
-|--------|------|-------|
-| truck_id | UUID | Primary key |
-| latitude | NUMERIC | Current position |
-| longitude | NUMERIC | Current position |
-| updated_at | TIMESTAMP | Last update |
-
-## Troubleshooting
-
-### npm install fails
-```bash
-npm install --force
-# Or
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### Can't login
-- Create user in Supabase: Authentication > Users > Add User
-- Verify email and password match exactly
-- Check Supabase URL and anon key are correct
-
-### No data showing
-- Verify tables exist in Supabase
-- Check data was inserted (Supabase Dashboard > SQL)
-- Ensure RLS policies allow reads (for testing, disable RLS)
-
-### Map not showing
-- Grant location permissions on phone
-- Check Supabase realtime is enabled
-- Verify live_locations table has data
-
-### App crashes
-- Check console for errors: `npm start` shows logs
-- Verify all dependencies installed: `npm install`
-- Clear cache: `expo start -c`
-
-## API Reference
-
-### Supabase Queries
-
-```typescript
-// Fetch trucks
-const { data } = await supabase.from('trucks').select('*');
-
-// Create trip
-await supabase.from('trips').insert({ truck_id, quantity_tons, ... });
-
-// Add fuel stop
-await supabase.from('fuel_stops').insert({ trip_id, fuel_refilled_liters, ... });
-
-// Subscribe to locations (Real-time)
-supabase.channel('live')
-  .on('postgres_changes', { event: '*', table: 'live_locations' }, callback)
-  .subscribe();
-```
-
-## Configuration
-
-### Supabase Keys
-- Update `supabase.ts` with your project credentials
-- Never commit keys to version control
-- Use environment variables in production
-
-### Theme
-- Edit `gluestack-ui.config.ts` for colors and branding
-- Modify `tailwind.config.js` for utility classes
-
-## Performance Tips
-
-- Use date filtering to reduce trips shown
-- Enable pagination for large trip lists
-- Batch location updates (10-30 second intervals)
-- Use realtime subscriptions sparingly
-
-## Security Notes
-
-- Keep Supabase keys secure
-- Use RLS policies for production
-- Enable authentication before deployment
-- Validate all user inputs
-
-## Future Enhancements
-
-- Driver and Manager role separation
-- Trip history and analytics
-- Fuel cost calculations
-- GPS accuracy improvements
-- Offline mode support
-- Push notifications
-- Export reports (PDF/Excel)
-- Integration with third-party logistics
-
-## Support
-
-For issues:
-1. Check console logs: `npm start`
-2. Verify Supabase setup
-3. Test with browser DevTools
-4. Check network requests in Supabase dashboard
-
-## License
-
-MIT License - Free to use and modify
+A complete **React Native + Expo** mobile application for managing truck fleets with **real-time trip management**, **fuel tracking**, and **live location monitoring**.
+Built using **Firebase (Authentication + Firestore)** with a scalable, production-ready architecture.
 
 ---
 
-**Happy Tracking! 🚚📱**
+## ✨ Features
+
+- **User Authentication** – Secure login & logout using Firebase Auth
+- **Manager Dashboard** – Overview of trucks, active trips, drivers, and pending loads
+- **Trip Management** – Create, track, and update trips with timestamps
+- **Fuel Tracking** – Log fuel refills during trips
+- **Unload Entry** – Mark trips completed with arrival time
+- **Recent Trips Feed** – Activity-style recent trip updates
+- **Live Location (Optional)** – Real-time truck tracking using Firebase + device GPS
+- **Responsive UI** – Clean and modern mobile-first design
+- **Cross Platform** – Android & iOS using Expo
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- **React Native**
+- **Expo**
+- **TypeScript**
+- **React Navigation**
+- **NativeWind / Custom Styles**
+
+### Backend
+
+- **Firebase Authentication**
+- **Firebase Firestore**
+- **Firebase Realtime / Cloud Functions (optional)**
+
+### Utilities
+
+- Expo Location (for GPS)
+- Firebase SDK
+- Secure environment variables
+
+---
+
+## 📦 Prerequisites
+
+- Node.js (v16+)
+- npm or yarn
+- Firebase account (free tier)
+- Expo Go app (for testing)
+
+---
+
+## ⚙️ Installation
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/cargo-tracker.git
+cd cargo-tracker
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+If needed:
+
+```bash
+npm install --force
+```
+
+---
+
+## 🔥 Firebase Setup
+
+### 3️⃣ Create Firebase Project
+
+1. Go to 👉 [https://console.firebase.google.com](https://console.firebase.google.com)
+2. Create a new project
+3. Enable **Authentication**
+
+   - Sign-in method: **Email / Password**
+
+4. Enable **Firestore Database**
+
+---
+
+### 4️⃣ Firebase Configuration
+
+Create `firebaseConfig.ts`:
+
+```ts
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+```
+
+⚠️ **Do NOT commit this file** (already covered in `.gitignore`)
+
+---
+
+## 🧱 Firestore Data Structure
+
+### 🔹 trucks (collection)
+
+```json
+{
+  "truckNo": "TRK-101",
+  "bidNo": "BID-001",
+  "createdAt": "timestamp"
+}
+```
+
+---
+
+### 🔹 trips (collection)
+
+```json
+{
+  "truckNo": "TRK-101",
+  "bidNo": "BID-001",
+  "quantity": 25,
+  "departureTime": "timestamp",
+  "arrivalTime": "timestamp | null",
+  "fuelFilled": 120,
+  "status": "ongoing | completed",
+  "createdAt": "timestamp"
+}
+```
+
+---
+
+### 🔹 liveLocations (optional – collection)
+
+```json
+{
+  "truckNo": "TRK-101",
+  "latitude": 28.6139,
+  "longitude": 77.209,
+  "updatedAt": "timestamp"
+}
+```
+
+---
+
+## ▶️ Running the App
+
+### Start Expo Server
+
+```bash
+npm start
+```
+
+### Android
+
+```bash
+npm run android
+```
+
+### iOS
+
+```bash
+npm run ios
+```
+
+Or simply scan the QR code using **Expo Go** 📱
+
+---
+
+## 📂 Project Structure
+
+```
+CargoTracker/
+├── App.tsx
+├── firebaseConfig.ts        # Firebase setup (ignored in git)
+├── screens/
+│   ├── LoginScreen.tsx
+│   ├── DashboardScreen.tsx
+│   ├── AddTripScreen.tsx
+│   ├── TripsListScreen.tsx
+│   └── LiveMapScreen.tsx
+├── utils/
+├── assets/
+├── package.json
+├── tsconfig.json
+├── app.json
+└── README.md
+```
+
+---
+
+## 🔐 Authentication Flow
+
+1. User logs in using Email & Password
+2. Firebase Auth manages session
+3. `auth.currentUser` used for protected routes
+4. Logout clears session instantly
+
+---
+
+## 📍 Live Location Tracking (Optional)
+
+- Use `expo-location` to get GPS
+- Update Firestore every 10–30 seconds
+- Subscribe using `onSnapshot()` for real-time updates
+
+```ts
+onSnapshot(collection(db, "liveLocations"), (snapshot) => {
+  snapshot.docs.forEach((doc) => console.log(doc.data()));
+});
+```
+
+---
+
+## 🧪 Common Issues & Fixes
+
+### App crashes on start
+
+```bash
+expo start -c
+```
+
+### Firebase auth not working
+
+- Check Email/Password enabled
+- Verify Firebase config values
+- Restart Metro bundler
+
+### Firestore permission error
+
+For testing:
+
+```js
+allow read, write: if true;
+```
+
+(Use proper rules in production)
+
+---
+
+## 🔒 Security Best Practices
+
+- Never commit Firebase keys
+- Use Firestore Rules
+- Validate all inputs
+- Restrict write access per user
+- Enable App Check (optional)
+
+---
+
+## 🚀 Future Enhancements
+
+- Driver vs Manager roles
+- Push notifications (Firebase Cloud Messaging)
+- Offline sync
+- Trip analytics dashboard
+- PDF / Excel export
+- Fuel cost calculations
+- Background location tracking
+
+---
+
+## 📜 License
+
+MIT License – Free to use and modify
+
+---
+
+## 🤝 Support
+
+If you face issues:
+
+1. Check Metro logs
+2. Verify Firebase setup
+3. Clear Expo cache
+4. Test Firestore rules
