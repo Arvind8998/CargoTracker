@@ -1,5 +1,4 @@
-// screens/DashboardScreen.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -12,30 +11,63 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import StyleSheet from '../utils/styleShim';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import { getTrips, addTrip, TripFirestore } from '../services/tripService';
 
 export default function DashboardScreen() {
     const navigation = useNavigation<any>();
     const user = auth.currentUser;
 
-    // Modal state
+    // Modal state - Step 1
     const [modalVisible, setModalVisible] = useState(false);
     const [vehicleNo, setVehicleNo] = useState('');
-    const [bidNo, setBidNo] = useState('');
+    const [lrNo, setLrNo] = useState('');
+    const [driverName, setDriverName] = useState('');
+    const [companyName, setCompanyName] = useState('');
+    const [itemType, setItemType] = useState('');
     const [quantity, setQuantity] = useState('');
-    const [departureTime, setDepartureTime] = useState('');
-    const [arrivalTime, setArrivalTime] = useState('');
     const [fuelFilled, setFuelFilled] = useState('');
 
-    // Dummy trips state (recent activity will show latest trips)
-    const [trips, setTrips] = useState([
-        { id: 1, truck: 'TRK-101', status: 'En route to Delhi', time: '2 hours ago' },
-        { id: 2, truck: 'TRK-205', status: 'Delivered', time: '4 hours ago' },
-    ]);
+    // Modal state - Step 2
+    const [modal2Visible, setModal2Visible] = useState(false);
+    const [departureTime, setDepartureTime] = useState<Date | null>(null);
+    const [arrivalTime, setArrivalTime] = useState<Date | null>(null);
+    const [fromPlant, setFromPlant] = useState('');
+    const [toPlant, setToPlant] = useState('');
+
+    // Date picker state
+    const [showDeparturePicker, setShowDeparturePicker] = useState(false);
+    const [showArrivalPicker, setShowArrivalPicker] = useState(false);
+
+    const [tempDepartureDate, setTempDepartureDate] = useState(new Date());
+    const [tempArrivalDate, setTempArrivalDate] = useState(new Date());
+
+    // Trips state
+    const [trips, setTrips] = useState<(TripFirestore & { id: string })[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    // Load trips from Firebase on mount
+    useEffect(() => {
+        loadTrips();
+    }, []);
+
+    const loadTrips = async () => {
+        try {
+            setLoading(true);
+            const fetchedTrips = await getTrips();
+            setTrips(fetchedTrips);
+        } catch (error) {
+            console.error('Error loading trips:', error);
+            Alert.alert('Error', 'Failed to load trips');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleLogout = () => {
         Alert.alert('Logout', 'Are you sure you want to log out?', [
@@ -51,34 +83,144 @@ export default function DashboardScreen() {
         ]);
     };
 
-    const handleAddTrip = () => {
-        if (!vehicleNo || !bidNo || !quantity || !departureTime) {
-            Alert.alert('Error', 'Please fill required fields (Vehicle, Bid, Quantity, Departure)');
+    const formatDateTime = (date: Date | null) => {
+        if (!date) return 'Select date & time';
+
+        const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+        };
+
+        return date.toLocaleString('en-US', options);
+    };
+
+    const formatTimeAgo = (date: Date) => {
+        const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+
+        if (seconds < 60) return 'Just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+        return `${Math.floor(seconds / 86400)} days ago`;
+    };
+
+    const handleDeparturePickerOpen = () => {
+        setTempDepartureDate(departureTime || new Date());
+        setShowDeparturePicker(true);
+    };
+
+    const handleArrivalPickerOpen = () => {
+        setTempArrivalDate(arrivalTime || new Date());
+        setShowArrivalPicker(true);
+    };
+
+    const onDepartureChange = (event: any, selectedDate?: Date) => {
+        if (event.type === 'dismissed') {
+            setShowDeparturePicker(false);
             return;
         }
 
-        const newTrip = {
-            id: trips.length + 1,
-            truck: vehicleNo.toUpperCase(),
-            status: `From: ${departureTime} → To: ${arrivalTime || 'Ongoing'}`,
-            time: 'Just now',
-        };
+        if (selectedDate) {
+            setTempDepartureDate(selectedDate);
+        }
 
-        setTrips([newTrip, ...trips]); // Add to top
-
-        Alert.alert('Success ✓', `Trip added for ${vehicleNo.toUpperCase()}`);
-
-        // Reset form & close modal
-        setVehicleNo('');
-        setBidNo('');
-        setQuantity('');
-        setDepartureTime('');
-        setArrivalTime('');
-        setFuelFilled('');
-        setModalVisible(false);
+        if (Platform.OS === 'android') {
+            setDepartureTime(selectedDate || null);
+            setShowDeparturePicker(false);
+        }
     };
 
-    // Stats (dummy)
+    const onArrivalChange = (event: any, selectedDate?: Date) => {
+        if (event.type === 'dismissed') {
+            setShowArrivalPicker(false);
+            return;
+        }
+
+        if (selectedDate) {
+            setTempArrivalDate(selectedDate);
+        }
+
+        if (Platform.OS === 'android') {
+            setArrivalTime(selectedDate || null);
+            setShowArrivalPicker(false);
+        }
+    };
+
+    const handleStep1Next = () => {
+        if (!vehicleNo || !lrNo || !driverName || !companyName || !itemType || !quantity) {
+            Alert.alert('Error', 'Please fill all required fields');
+            return;
+        }
+
+        setModalVisible(false);
+        setModal2Visible(true);
+    };
+
+    const handleAddTrip = async () => {
+        if (!departureTime || !fromPlant || !toPlant) {
+            Alert.alert('Error', 'Please fill required fields (Departure Time, From Plant, To Plant)');
+            return;
+        }
+
+        try {
+            const tripData: Omit<TripFirestore, 'createdAt'> = {
+                truck: vehicleNo.toUpperCase(),
+                status: `${fromPlant} → ${toPlant}${arrivalTime ? ' (Delivered)' : ' (En route)'}`,
+                time: 'Just now',
+                bidNo: lrNo,                    // LR No goes here
+                quantity: quantity,
+                departureTime: departureTime!,   // Non-null assertion since we validated
+                arrivalTime: arrivalTime,
+                fuelFilled: fuelFilled || '0',
+                userId: user?.uid,
+                driverName: driverName,
+                fromPlant: fromPlant,
+                toPlant: toPlant,
+                companyName: companyName,
+                itemType: itemType,
+            };
+
+            await addTrip(tripData);
+
+            Alert.alert('Success ✓', `Trip added for ${vehicleNo.toUpperCase()}`);
+
+            // Reset all form fields
+            resetForm();
+
+            // Reload trips
+            await loadTrips();
+
+            setModal2Visible(false);
+        } catch (error) {
+            console.error('Error adding trip:', error);
+            Alert.alert('Error', 'Failed to add trip. Please try again.');
+        }
+    };
+
+    const resetForm = () => {
+        setVehicleNo('');
+        setLrNo('');
+        setDriverName('');
+        setCompanyName('');
+        setItemType('');
+        setQuantity('');
+        setFuelFilled('');
+        setDepartureTime(null);
+        setArrivalTime(null);
+        setFromPlant('');
+        setToPlant('');
+    };
+
+    const handleModalClose = () => {
+        setModalVisible(false);
+        setModal2Visible(false);
+        resetForm();
+    };
+
+    // Stats
     const stats = [
         { title: 'Total Trucks', value: '24', color: '#1d4ed8' },
         { title: 'Active Trips', value: trips.length.toString(), color: '#16a34a' },
@@ -113,17 +255,27 @@ export default function DashboardScreen() {
                 {/* Recent Trips */}
                 <Text style={styles.sectionTitle}>Recent Trips</Text>
                 <View style={styles.activityList}>
-                    {trips.length === 0 ? (
+                    {loading ? (
+                        <Text style={styles.emptyText}>Loading trips...</Text>
+                    ) : trips.length === 0 ? (
                         <Text style={styles.emptyText}>No trips yet. Add one!</Text>
                     ) : (
                         trips.map((item) => (
                             <View key={item.id} style={styles.activityItem}>
                                 <View style={styles.activityDot} />
                                 <View style={styles.activityContent}>
-                                    <Text style={styles.truckName}>{item.truck}</Text>
-                                    <Text style={styles.statusText}>{item.status}</Text>
+                                    <View style={styles.tripHeader}>
+                                        <Text style={styles.truckName}>
+                                            {item.truck} {item.driverName ? `(${item.driverName.split(' ')[0]})` : ''}
+                                        </Text>
+                                        <Text style={styles.routeText}>
+                                            {item.fromPlant || 'N/A'} → {item.toPlant || 'N/A'}
+                                        </Text>
+                                    </View>
+                                    <Text style={styles.statusText}>
+                                        {formatDateTime(item.departureTime)} → {item.arrivalTime ? formatDateTime(item.arrivalTime) : 'Ongoing'}
+                                    </Text>
                                 </View>
-                                <Text style={styles.timeText}>{item.time}</Text>
                             </View>
                         ))
                     )}
@@ -138,55 +290,63 @@ export default function DashboardScreen() {
                 <Text style={styles.fabText}>+</Text>
             </TouchableOpacity>
 
-            {/* Add Trip Modal */}
+            {/* Step 1 Modal - Basic Info */}
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
+                onRequestClose={handleModalClose}
             >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={styles.modalOverlay}
                 >
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Add New Trip</Text>
+                        <Text style={styles.modalTitle}>Add New Trip - Step 1</Text>
+                        <Text style={styles.modalSubtitle}>Basic Information</Text>
 
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Vehicle No (e.g., TRK-101)"
+                            placeholder="Vehicle Number *"
                             value={vehicleNo}
                             onChangeText={setVehicleNo}
                             autoCapitalize="characters"
                         />
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Bid No"
-                            value={bidNo}
-                            onChangeText={setBidNo}
+                            placeholder="LR No *"
+                            value={lrNo}
+                            onChangeText={setLrNo}
                         />
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Quantity (tons)"
+                            placeholder="Driver Name *"
+                            value={driverName}
+                            onChangeText={setDriverName}
+                            autoCapitalize="words"
+                        />
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Company Name *"
+                            value={companyName}
+                            onChangeText={setCompanyName}
+                        />
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Item Type *"
+                            value={itemType}
+                            onChangeText={setItemType}
+                        />
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="Quantity (tons) *"
                             value={quantity}
                             onChangeText={setQuantity}
                             keyboardType="numeric"
                         />
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Departure Time (e.g., 2026-01-06 08:00)"
-                            value={departureTime}
-                            onChangeText={setDepartureTime}
-                        />
-                        <TextInput
-                            style={styles.modalInput}
-                            placeholder="Arrival Time (optional)"
-                            value={arrivalTime}
-                            onChangeText={setArrivalTime}
-                        />
-                        <TextInput
-                            style={styles.modalInput}
-                            placeholder="Fuel Filled (liters, optional)"
+                            placeholder="Fuel Filled (liters)"
                             value={fuelFilled}
                             onChangeText={setFuelFilled}
                             keyboardType="numeric"
@@ -195,15 +355,146 @@ export default function DashboardScreen() {
                         <View style={styles.modalButtons}>
                             <Pressable
                                 style={[styles.modalButton, styles.cancelButton]}
-                                onPress={() => setModalVisible(false)}
+                                onPress={handleModalClose}
                             >
                                 <Text style={styles.cancelText}>Cancel</Text>
                             </Pressable>
                             <Pressable
                                 style={[styles.modalButton, styles.saveButton]}
+                                onPress={handleStep1Next}
+                            >
+                                <Text style={styles.saveText}>Next</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+            </Modal>
+
+            {/* Step 2 Modal - Trip Details */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modal2Visible}
+                onRequestClose={handleModalClose}
+            >
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.modalOverlay}
+                >
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Add New Trip - Step 2</Text>
+                        <Text style={styles.modalSubtitle}>Trip Details</Text>
+
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="From Plant *"
+                            value={fromPlant}
+                            onChangeText={setFromPlant}
+                        />
+                        <TextInput
+                            style={styles.modalInput}
+                            placeholder="To Plant *"
+                            value={toPlant}
+                            onChangeText={setToPlant}
+                        />
+
+                        {/* Departure Date & Time */}
+                        <TouchableOpacity
+                            style={styles.dateButton}
+                            onPress={handleDeparturePickerOpen}
+                        >
+                            <Text style={[styles.dateText, departureTime && styles.dateTextSelected]}>
+                                {departureTime ? formatDateTime(departureTime) : 'Departure Date & Time *'}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {showDeparturePicker && (
+                            <Modal
+                                transparent={true}
+                                animationType="slide"
+                                visible={showDeparturePicker}
+                                onRequestClose={() => setShowDeparturePicker(false)}
+                            >
+                                <View style={pickerModalStyles.overlay}>
+                                    <View style={pickerModalStyles.container}>
+                                        <DateTimePicker
+                                            value={tempDepartureDate}
+                                            mode="datetime"
+                                            display="spinner"
+                                            onChange={onDepartureChange}
+                                        />
+                                        {Platform.OS === 'ios' && (
+                                            <TouchableOpacity
+                                                style={pickerModalStyles.doneButton}
+                                                onPress={() => {
+                                                    setDepartureTime(tempDepartureDate);
+                                                    setShowDeparturePicker(false);
+                                                }}
+                                            >
+                                                <Text style={pickerModalStyles.doneText}>Done</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+
+                        {/* Arrival Date & Time */}
+                        <TouchableOpacity
+                            style={styles.dateButton}
+                            onPress={handleArrivalPickerOpen}
+                        >
+                            <Text style={[styles.dateText, arrivalTime && styles.dateTextSelected]}>
+                                {arrivalTime ? formatDateTime(arrivalTime) : 'Arrival Date & Time (optional)'}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {showArrivalPicker && (
+                            <Modal
+                                transparent={true}
+                                animationType="slide"
+                                visible={showArrivalPicker}
+                                onRequestClose={() => setShowArrivalPicker(false)}
+                            >
+                                <View style={pickerModalStyles.overlay}>
+                                    <View style={pickerModalStyles.container}>
+                                        <DateTimePicker
+                                            value={tempArrivalDate}
+                                            mode="datetime"
+                                            display="spinner"
+                                            onChange={onArrivalChange}
+                                        />
+                                        {Platform.OS === 'ios' && (
+                                            <TouchableOpacity
+                                                style={pickerModalStyles.doneButton}
+                                                onPress={() => {
+                                                    setArrivalTime(tempArrivalDate);
+                                                    setShowArrivalPicker(false);
+                                                }}
+                                            >
+                                                <Text style={pickerModalStyles.doneText}>Done</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    </View>
+                                </View>
+                            </Modal>
+                        )}
+
+                        <View style={styles.modalButtons}>
+                            <Pressable
+                                style={[styles.modalButton, styles.cancelButton]}
+                                onPress={() => {
+                                    setModal2Visible(false);
+                                    setModalVisible(true);
+                                }}
+                            >
+                                <Text style={styles.cancelText}>Back</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.modalButton, styles.saveButton]}
                                 onPress={handleAddTrip}
                             >
-                                <Text style={styles.saveText}>Add Trip</Text>
+                                <Text style={styles.saveText}>Save Trip</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -212,6 +503,32 @@ export default function DashboardScreen() {
         </SafeAreaView>
     );
 }
+
+const pickerModalStyles = StyleSheet.create({
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end',
+    },
+    container: {
+        backgroundColor: 'white',
+        paddingTop: 16,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    doneButton: {
+        paddingVertical: 16,
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+        borderTopWidth: 1,
+        borderTopColor: '#ddd',
+    },
+    doneText: {
+        fontSize: 18,
+        color: '#007AFF',
+        fontWeight: '600',
+    },
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -292,7 +609,7 @@ const styles = StyleSheet.create({
     },
     activityItem: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',  // Changed from 'center'
         paddingVertical: 12,
         borderBottomWidth: 1,
         borderBottomColor: '#e5e7eb',
@@ -304,6 +621,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#1d4ed8',
         marginRight: 12,
     },
+    tripHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6,
+    },
+    routeText: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#1d4ed8',
+        marginLeft: 8,
+    },
     activityContent: {
         flex: 1,
     },
@@ -311,11 +640,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
         color: '#111827',
+        flex: 1,
     },
     statusText: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#6b7280',
-        marginTop: 2,
+        marginTop: 0,
     },
     timeText: {
         fontSize: 12,
@@ -351,6 +681,7 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: '#fff',
         width: '90%',
+        maxHeight: '80%',
         borderRadius: 16,
         padding: 24,
         shadowColor: '#000',
@@ -363,6 +694,12 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: 'bold',
         color: '#111827',
+        marginBottom: 8,
+        textAlign: 'center',
+    },
+    modalSubtitle: {
+        fontSize: 14,
+        color: '#6b7280',
         marginBottom: 20,
         textAlign: 'center',
     },
@@ -419,6 +756,10 @@ const styles = StyleSheet.create({
     },
     dateText: {
         fontSize: 16,
-        color: '#374151',
+        color: '#9ca3af',
+    },
+    dateTextSelected: {
+        color: '#111827',
+        fontWeight: '500',
     },
 });
