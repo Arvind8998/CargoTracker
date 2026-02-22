@@ -10,6 +10,15 @@
     },
     "android": {
       "package": "com.harsh.cargotracker"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "31ceae25-f7b1-493f-bcbb-9538935d5bbd"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/31ceae25-f7b1-493f-bcbb-9538935d5bbd"
     }
   }
 }
