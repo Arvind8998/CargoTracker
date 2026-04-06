@@ -7,29 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		013B3E99853FFAD851282EE8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D234E3403B47C605D7DE755 /* ExpoModulesProvider.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		16F6E20BAABC73CEA5198C8B /* libPods-CargoTracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F7E6100DAD31F1DF0CB8E /* libPods-CargoTracker.a */; };
-		2426E84D28361B65A2600425 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AD3C9BDBDECCAB5A99BC0057 /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		9E35B6780B163D259810F1D4 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7EC9D3583F445AA0AFEBD8 /* ExpoModulesProvider.swift */; };
+		A07DC69F0BBA82573110916D /* libPods-CargoTracker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F98EE86B626D1C75758D8FEC /* libPods-CargoTracker.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		D3E3BC597CF8F6165BFA7451 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 140289EBA1CC5828C171C116 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0D234E3403B47C605D7DE755 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-CargoTracker/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* CargoTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CargoTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CargoTracker/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CargoTracker/Info.plist; sourceTree = "<group>"; };
-		3370C7FBF46AB0D0AD68C9CD /* Pods-CargoTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CargoTracker.release.xcconfig"; path = "Target Support Files/Pods-CargoTracker/Pods-CargoTracker.release.xcconfig"; sourceTree = "<group>"; };
-		5F059F9C9B0B2BA2AC3306B9 /* Pods-CargoTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CargoTracker.debug.xcconfig"; path = "Target Support Files/Pods-CargoTracker/Pods-CargoTracker.debug.xcconfig"; sourceTree = "<group>"; };
-		651F7E6100DAD31F1DF0CB8E /* libPods-CargoTracker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CargoTracker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		140289EBA1CC5828C171C116 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CargoTracker/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		5D7EC9D3583F445AA0AFEBD8 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-CargoTracker/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7B71607173FEFF7F99D66FF3 /* Pods-CargoTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CargoTracker.release.xcconfig"; path = "Target Support Files/Pods-CargoTracker/Pods-CargoTracker.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = CargoTracker/SplashScreen.storyboard; sourceTree = "<group>"; };
-		AD3C9BDBDECCAB5A99BC0057 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CargoTracker/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B6E801A1462CDF2D0E80DE67 /* Pods-CargoTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CargoTracker.debug.xcconfig"; path = "Target Support Files/Pods-CargoTracker/Pods-CargoTracker.debug.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CargoTracker/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* CargoTracker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CargoTracker-Bridging-Header.h"; path = "CargoTracker/CargoTracker-Bridging-Header.h"; sourceTree = "<group>"; };
+		F98EE86B626D1C75758D8FEC /* libPods-CargoTracker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CargoTracker.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,13 +37,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16F6E20BAABC73CEA5198C8B /* libPods-CargoTracker.a in Frameworks */,
+				A07DC69F0BBA82573110916D /* libPods-CargoTracker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		02F738C579B5EBF1B6C6C644 /* CargoTracker */ = {
+			isa = PBXGroup;
+			children = (
+				5D7EC9D3583F445AA0AFEBD8 /* ExpoModulesProvider.swift */,
+			);
+			name = CargoTracker;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* CargoTracker */ = {
 			isa = PBXGroup;
 			children = (
@@ -53,7 +61,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				AD3C9BDBDECCAB5A99BC0057 /* PrivacyInfo.xcprivacy */,
+				140289EBA1CC5828C171C116 /* PrivacyInfo.xcprivacy */,
 			);
 			name = CargoTracker;
 			sourceTree = "<group>";
@@ -62,24 +70,16 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				651F7E6100DAD31F1DF0CB8E /* libPods-CargoTracker.a */,
+				F98EE86B626D1C75758D8FEC /* libPods-CargoTracker.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4D9D6948DD6860325EE48B3D /* ExpoModulesProviders */ = {
+		5819FE889AFB4347D07998F2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				966B40E664E73F871F3741F0 /* CargoTracker */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
-		6023BA594A941D83F37C11A3 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				5F059F9C9B0B2BA2AC3306B9 /* Pods-CargoTracker.debug.xcconfig */,
-				3370C7FBF46AB0D0AD68C9CD /* Pods-CargoTracker.release.xcconfig */,
+				B6E801A1462CDF2D0E80DE67 /* Pods-CargoTracker.debug.xcconfig */,
+				7B71607173FEFF7F99D66FF3 /* Pods-CargoTracker.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -99,8 +99,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				6023BA594A941D83F37C11A3 /* Pods */,
-				4D9D6948DD6860325EE48B3D /* ExpoModulesProviders */,
+				5819FE889AFB4347D07998F2 /* Pods */,
+				CEAB525B60972A1A0BD3C1C7 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -115,14 +115,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		966B40E664E73F871F3741F0 /* CargoTracker */ = {
-			isa = PBXGroup;
-			children = (
-				0D234E3403B47C605D7DE755 /* ExpoModulesProvider.swift */,
-			);
-			name = CargoTracker;
-			sourceTree = "<group>";
-		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +122,14 @@
 			);
 			name = Supporting;
 			path = CargoTracker/Supporting;
+			sourceTree = "<group>";
+		};
+		CEAB525B60972A1A0BD3C1C7 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				02F738C579B5EBF1B6C6C644 /* CargoTracker */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CargoTracker" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				208A308AD0168064F9F9CA88 /* [Expo] Configure project */,
+				062FB230B845A97984D969CA /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				D8D91BAE596F7A68A50A0376 /* [CP] Embed Pods Frameworks */,
+				BE6E53AABAE3DCED46BD359A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				2426E84D28361B65A2600425 /* PrivacyInfo.xcprivacy in Resources */,
+				D3E3BC597CF8F6165BFA7451 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,29 +220,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
-		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CargoTracker-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		208A308AD0168064F9F9CA88 /* [Expo] Configure project */ = {
+		062FB230B845A97984D969CA /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -265,6 +243,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-CargoTracker/expo-configure-project.sh\"\n";
+		};
+		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CargoTracker-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -308,7 +308,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CargoTracker/Pods-CargoTracker-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D8D91BAE596F7A68A50A0376 /* [CP] Embed Pods Frameworks */ = {
+		BE6E53AABAE3DCED46BD359A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -338,7 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				013B3E99853FFAD851282EE8 /* ExpoModulesProvider.swift in Sources */,
+				9E35B6780B163D259810F1D4 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +347,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F059F9C9B0B2BA2AC3306B9 /* Pods-CargoTracker.debug.xcconfig */;
+			baseConfigurationReference = B6E801A1462CDF2D0E80DE67 /* Pods-CargoTracker.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -383,7 +383,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3370C7FBF46AB0D0AD68C9CD /* Pods-CargoTracker.release.xcconfig */;
+			baseConfigurationReference = 7B71607173FEFF7F99D66FF3 /* Pods-CargoTracker.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

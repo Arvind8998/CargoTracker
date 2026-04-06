@@ -36,7 +36,7 @@ export default function RegisterScreen() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
             await createUserProfile(userCredential.user.uid, email, 'driver');
-            
+
             Alert.alert('Success ✓', 'Account created successfully!');
             navigation.replace('Login');
         } catch (err: any) {
